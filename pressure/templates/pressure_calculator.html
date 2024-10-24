@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pressure Calculator</title>
+    <style>
+        body {
+            font-family: Helvetica, Georgia;
+            background-color: #80AF81;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        h1{
+            margin-bottom: 0;
+        }
+
+        .welcome-message {
+        font-family: Helvetica, Georgia;
+        font-size: 18px;
+        font-weight: bold;
+        color: #000000;
+        text-align: center;
+        line-height: 3px;
+        margin-bottom: 20px;
+        padding: 10px;
+        }
+
+        .welcome-message:hover {
+            color: #D6EFD8;
+            text-shadow: 3px 3px 5px rgba(0, 0, 0, 0.5);
+        }
+
+        .calculator {
+            background-color: #508D4E;
+            color:#1A1A19;
+            padding: 20px;
+            border: 2px solid #D6EFD8;
+            border-radius: 10px;
+            box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 400px;
+        }
+
+        input, select {
+            margin: 10px 0;
+            padding: 10px;
+            font-size: 18px;
+            width: calc(100% - 22px);
+            border: 2px solid #1A1A19;
+            border-radius: 5px;
+        }
+
+        button {
+            background-color: #1A5319;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 18px;
+        }
+
+        button:hover {
+            background-color: #859F3D;
+            border: 1px solid #D6EFD8;
+        }
+
+        .result {
+            margin-top: 20px;
+            font-size: 20px;
+            font-weight: bolder;
+            color: #ffffff;
+        }
+
+        label {
+            font-weight: bold;
+        }
+
+        .button-group {
+            display: flex;
+            justify-content: space-between;
+        }
+    </style>
+</head>
+<body>
+    <h1>PRESSURE CALCULATOR</h1>
+    <div class="welcome-message">
+        <p>Welcome to the Pressure Calculator!</p>
+        <p>This versatile tool allows you to effortlessly calculate pressure based on the force and area you input.</p>
+        <p>Simply enter the force in Newtons and the area in square meters, and the calculator will provide you with the pressure in Pascals.</p>
+        <p>For your convenience, the calculator also offers results in other common units like psi, bar, atm, Torr, etc.</p>
+    </div>
+    <div class="calculator">
+        <form method="POST" action="/calculate">
+            <!-- Input for Force values -->
+            <label for="force">Force:</label>
+            <input type="text" id="force" name="force" required placeholder="Enter force in Newtons (N)" value="{{ request.form.force }}">
+            <br>
+            
+            <!-- Input for Area values -->
+            <label for="area">Area of the surface:</label>
+            <input type="text" id="area" name="area" required placeholder="Enter area in square meters (m^2)" value="{{ request.form.area }}">
+            <br>
+
+            <!-- Selection of different unit conversions -->
+            <label for="unit">Select Unit:</label>
+            <select id="unit" name="unit">
+                <option value="pa" style="background-color: #859F3D;" {% if selected_unit == "Pa" %}selected{% endif %}>Pascals (Pa)</option>
+                <option value="psi" style="background-color: #859F3D;" {% if selected_unit == "psi" %}selected{% endif %}>Pounds per Square Inch (psi)</option>
+                <option value="bar" style="background-color: #859F3D;" {% if selected_unit == "bar" %}selected{% endif %}>Bars (bar)</option>
+                <option value="atm" style="background-color: #859F3D;" {% if selected_unit == "atm" %}selected{% endif %}>Atmospheres (atm)</option>
+                <option value="torr" style="background-color: #859F3D;" {% if selected_unit == "mmHg (Torr)" %}selected{% endif %}>Millimeters of Mercury (mmHg, Torr)</option>
+                <option value="kPa" style="background-color: #859F3D;" {% if selected_unit == "kPa" %}selected{% endif %}>Kilopascals (kPa)</option>
+                <option value="at" style="background-color: #859F3D;" {% if selected_unit == "at" %}selected{% endif %}>Technical Atmospheres (at)</option>
+                <option value="hPa" style="background-color: #859F3D;" {% if selected_unit == "hPa" %}selected{% endif %}>Hectopascals (hPa)</option>
+                <option value="MPa" style="background-color: #859F3D;" {% if selected_unit == "MPa" %}selected{% endif %}>Megapascals (MPa)</option>
+                <option value="inHg" style="background-color: #859F3D;" {% if selected_unit == "inHg" %}selected{% endif %}>Inches of Mercury (inHg)</option>
+            </select>
+            
+            <div class="button-group">
+                <button type="submit">Calculate Pressure</button> <!-- Button to solve the Pressure -->
+                <button type="submit" formaction="/clear">Clear</button> <!-- Button to clear the inputs and result -->
+            </div>
+        </form>
+
+        {% if error_message %}
+            <p style="color: #ffffff;">{{ error_message }}</p>
+        {% endif %}
+        {% if pressure %}
+            <div class="result">
+                <p>Pressure: {{ pressure }} {{ selected_unit }}</p>
+            </div>
+        {% endif %}
+    </div>
+</body>
+</html>
